@@ -1,5 +1,4 @@
-![](./resources/quaga.png)
-# QUAGA
+![](./resources/quagga2.jpeg)
 ## What is it ?
 Quagga is a free software routing suite that supports static and dynamic routing protocols.
 
