@@ -12,9 +12,25 @@ The zebra daemon is a **abstraction layer** between the kernel and the running r
 
 Quagga installed on a physical host acts as a dedicated router. Quagga updates the kernel routing table. It modifies interface IP addressing, sets static routes and enables dynamic routing.
 
+## What you should do ?
+
+The idea is to configure 3 servers that will act as routers.
+
+![](./resources/QuaggaLab.png)
+
+- Step by step bro!
+    - Create Virtual Machines. Ubuntu environment is preferred 
+    - Install Quagga and grant access in zebra for Rip and Bgp
+    - Configure routing protocol RIP between  R1 y R2
+    - Configure Loopback Address in R2 and R3
+    - Configure GRE Tunnel between  R2 y R3
+    - Configure eBGP or iBGP Routing Protocol between R2 y R3
+    - Configure Route redistribution in Rip from R3 to R2 from BGP 
+
 ## Installation
 
 #### Install linux vm
+Ubuntu is recommended.
 #### Grant ssh access to vm
 ```sh
 sudo apt-get install openssh-server
