@@ -1,7 +1,7 @@
-![](./resources/freeOsRouting.jpg)
 # QUAGGA
+![](./resources/freeOsRouting.jpg)
 
-## Intro
+## What is it ?
 Quagga is a free software routing suite that supports static and dynamic routing protocols.
 
 The Quagga routing suite consists of 2 parts:
