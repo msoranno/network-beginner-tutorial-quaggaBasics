@@ -1,21 +1,15 @@
 ![](./resources/freeOsRouting.jpg)
 # QUAGGA
 
-** Table of Contents **
+## Intro
+Quagga is a free software routing suite that supports static and dynamic routing protocols.
 
-[TOCM]
+The Quagga routing suite consists of 2 parts:
 
-[TOC]
+> zebra daemon
 
-#H1 header
-##H2 header
-###H3 header
-####H4 header
-#####H5 header
-######H6 header
-#Heading 1 link [Heading link](https://github.com/pandao/editor.md "Heading link")
-##Heading 2 link [Heading link](https://github.com/pandao/editor.md "Heading link")
-###Heading 3 link [Heading link](https://github.com/pandao/editor.md "Heading link")
-####Heading 4 link [Heading link](https://github.com/pandao/editor.md "Heading link") Heading link [Heading link](https://github.com/pandao/editor.md "Heading link")
-#####Heading 5 link [Heading link](https://github.com/pandao/editor.md "Heading link")
-######Heading 6 link [Heading link](https://github.com/pandao/editor.md "Heading link")
+> routing processes (RIP,OSPF,BGP,IS-IS,Babel,OLSR,LDP,BFD)
+
+The zebra daemon is a **abstraction layer** between the kernel and the running routing processes. Each routing protocol has its own specific daemon.
+
+Quagga installed on a physical host acts as a dedicated router. Quagga updates the kernel routing table. It modifies interface IP addressing, sets static routes and enables dynamic routing.
