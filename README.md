@@ -18,8 +18,8 @@ The idea is to configure 3 servers that will act as routers.
 
 ![](./resources/QuaggaLab.png)
 
-- Step by step bro!
-    - Create Virtual Machines. Ubuntu environment is preferred 
+-  **Step by step bro!**
+    - Create Virtual Machines. 
     - Install Quagga and grant access in zebra for Rip and Bgp
     - Configure routing protocol RIP between  R1 y R2
     - Configure Loopback Address in R2 and R3
@@ -27,7 +27,7 @@ The idea is to configure 3 servers that will act as routers.
     - Configure eBGP or iBGP Routing Protocol between R2 y R3
     - Configure Route redistribution in Rip from R3 to R2 from BGP 
 
-## Installation
+## Install and configure
 
 #### Install linux vm
 Ubuntu is recommended.
@@ -108,4 +108,82 @@ sudo /etc/init.d/quagga restart || sudo systemctl restart zebra
 #### CONFIG VSTYSH
 ```sh
 echo VTYSH_PAGER=more > /etc/environment
+```
+
+## R1
+#### RIP
+```
+router rip
+ timers basic 5 30 20
+ network eth0
+```
+## R2
+#### quagga
+```
+!
+router rip
+ timers basic 5 30 20
+ redistribute bgp metric 5
+ netowrk eth0
+!
+router bgp 65101
+ no synchronization
+ bgp router-id 1.0.0.1
+ redistribute kernel metric 100
+ redistribute connected metric 100
+ redistribute static metric 100
+ redistribute rip metric 100
+ neighbor fd77:d15:128::ffff:141:2 remote-as 65102
+ neighbor fd77:d15:128::ffff:141:2 soft-reconfiguration inbound
+ neighbor fd77:d15:128::ffff:141:2 route-map engw-in in
+ neighbor fd77:d15:128::ffff:141:2 route-map engw-out out
+ no auto-summary
+!
+
+!
+ address-family ipv6
+ neighbor fd77:d15:128::ffff:141:2 activate
+ exit-address-family
+!
+```
+
+> **Pro tip: ** The BGP neighbor is IPV6, session IPV6 and IPV4 prefix.. but everything can be done in IPV4.
+
+```
+!
+route-map engw-in permit 5
+ match ip address prefix-list prefixes-in-v4-engw
+!
+route-map engw-out permit 5
+ match ip address prefix-list prefixes-out-v4-engw
+!
+
+ip prefix-list prefixes-in-v4-engw seq 5 permit any
+ip prefix-list prefixes-out-v4-engw seq 5 permit any
+```
+
+#### interfaces
+```
+root@Ubuntu3:~# cat /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+up ip addr add 5.5.5.5/32 dev lo
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+address 192.168.122.6
+netmask 255.255.255.0
+gateway 192.168.122.1
+
+##Tunnel
+up ip tunnel add t01 mode gre remote 192.168.122.5 local 192.168.122.6 ttl 255
+up ip addr add 1.0.0.1/30 dev t01
+up ip -6 addr add fd77:d15:128::ffff:141:1/126 dev t01
+up ip link set mtu 1464 multicast on dev t01
+up ip link set up t01
 ```
